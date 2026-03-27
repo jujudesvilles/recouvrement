@@ -79,7 +79,17 @@ const fmt=n=>n!=null?parseInt(n).toLocaleString('fr-FR'):'—';
 const now=()=>new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})+' '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
 const ini=name=>name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
 const me=()=>CFG.current_user;
-const ml=(to,s,b)=>`mailto:${to}?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(b)}`;
+// Ouvre Front en mode composition + copie le corps dans le presse-papier
+function sendToFront(to,subj,body,logId,logType){
+  // 1. Copier le corps dans le presse-papier
+  navigator.clipboard.writeText(body).catch(()=>{});
+  // 2. Ouvrir Front compose (URL officielle Front)
+  const frontUrl='https://app.frontapp.com/compose?to='+encodeURIComponent(to)+'&subject='+encodeURIComponent(subj);
+  window.open(frontUrl,'_blank');
+  // 3. Logger si demandé
+  if(logId&&logType)logE(logType,logId);
+  showToast('Front ouvert · Corps copié dans le presse-papier ✓');
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // EMAIL TEMPLATES
@@ -123,7 +133,10 @@ Pourriez-vous nous soumettre votre convention d'honoraires ?
 Bien cordialement,
 ${d.juriste} — Matera`,
 
-  validation_devis:d=>`Bonjour ${d.pcs_nom},
+  validation_devis:d=>{
+    const exp=new Date(Date.now()+(15*24*60*60*1000)).toISOString().slice(0,10);
+    const token=btoa(d.id+'|'+exp).replace(/=/g,'');
+    return `Bonjour ${d.pcs_nom},
 
 Nous avons reçu la convention d'honoraires de ${d.cabinet} pour la procédure concernant ${d.debiteur}.
 
@@ -135,12 +148,13 @@ RÉCAPITULATIF
 • Honoraires proposés : ${fmt(d.devis)} € HT
 ━━━━━━━━━━━━━━━━━━━━━━━
 
-👉 Valider ou refuser en cliquant ici (valable 72h) :
-→ https://app.matera.eu/cs/validate/${d.id}
+👉 Valider ou refuser (lien valable 15 jours, expire le ${exp}) :
+→ https://app.matera.eu/cs/validate/${token}
 
 Bien cordialement,
 ${d.juriste} — Équipe juridique Matera
-${CFG.from_email}`,
+${CFG.from_email}`;
+  },
 
   devis_valide_pcs:d=>`Bonjour ${d.pcs_nom},
 
@@ -304,6 +318,9 @@ function showEmailBanner(d,type,prevCol){
   const to=eTo(type,d),toL=eToL(type,d);
   const subj=SUBJ[type]?SUBJ[type](d):'',body=BODY[type]?BODY[type](d):'';
   const col=COLS.find(c=>c.id===d.col);
+  // Stocker dans globals pour l'onclick du banner
+  window._bannerTo=to; window._bannerSubj=subj; window._bannerBody=body;
+  window._bannerId=d.id; window._bannerType=type; window._bannerPrev=prevCol;
   d.j.push({ts:now(),a:'Sys.',txt:`Email "${type}" → ${toL}`,em:true,et:type});
   document.getElementById('etb-zone').innerHTML=`<div class="etb">
     <span class="mdi mdi-email-fast-outline"></span>
@@ -311,8 +328,8 @@ function showEmailBanner(d,type,prevCol){
       <div class="etb-t">Email auto déclenché → <em>${col.label}</em></div>
       <div style="font-size:11px;color:var(--sub)">À : <strong>${toL}</strong> · ${subj}</div>
       <div class="etb-acts">
-        <a class="mbtn" style="font-size:11px;padding:4px 10px" href="${ml(to,subj,body)}" onclick="confirmEmail(${d.id},'${type}')"><span class="mdi mdi-open-in-new"></span>Ouvrir dans Front</a>
-        <button class="btn bde bsm" onclick="blockEmail(${d.id},'${prevCol}')"><span class="mdi mdi-cancel"></span>Bloquer</button>
+        <button class="mbtn" style="font-size:11px;padding:4px 10px" onclick="sendToFront(window._bannerTo,window._bannerSubj,window._bannerBody);confirmEmail(window._bannerId,window._bannerType)"><span class="mdi mdi-open-in-new"></span>Ouvrir dans Front</button>
+        <button class="btn bde bsm" onclick="blockEmail(window._bannerId,window._bannerPrev)"><span class="mdi mdi-cancel"></span>Bloquer</button>
         <button class="btn bgh bsm" onclick="document.getElementById('etb-zone').innerHTML=''"><span class="mdi mdi-close"></span></button>
       </div>
     </div></div>`;
@@ -436,18 +453,23 @@ function openEM(type,id){
     </div>`;
   }
 
+  // Stocker body dans var globale pour que closeModal() ne le détruise pas
+  window._pendingEmailBody = body;
+  window._pendingEmailTo = to;
+  window._pendingEmailSubj = subj;
+
   openModal(`Email → ${toL}`,`
-    <div class="al ali"><span class="mdi mdi-information-outline"></span><span>Prévisualisez l'email. "Ouvrir dans Front" l'envoie depuis <strong>${CFG.from_email}</strong>.</span></div>
+    <div class="al ali"><span class="mdi mdi-information-outline"></span><span>Prévisualisez l'email. "Ouvrir dans Front" copie le corps et ouvre Front.</span></div>
     ${peda}
     <div class="ep">
       <div class="eph"><div style="font-size:11px;color:var(--sub);margin-bottom:2px"><strong>${CFG.from_email}</strong> → ${to} (${toL})</div><div class="eps">${subj}</div></div>
       <div class="epb" id="ep-b">${body}</div>
     </div>`,`
     <span class="cc" id="cc-em"><span class="mdi mdi-check"></span>Copié</span>
-    <button class="btn bsm" onclick="copyEl('ep-b','cc-em')"><span class="mdi mdi-content-copy"></span>Copier</button>
+    <button class="btn bsm" onclick="copyEl('ep-b','cc-em')"><span class="mdi mdi-content-copy"></span>Copier le corps</button>
     <div class="sp"></div>
-    <button class="btn bde bsm" onclick="closeModal()"><span class="mdi mdi-cancel"></span>Bloquer</button>
-    <a class="mbtn" style="font-size:12px;padding:6px 13px" href="${ml(to,subj,body)}" onclick="closeModal();logE('${type}',${id})"><span class="mdi mdi-open-in-new"></span>Ouvrir dans Front</a>`);
+    <button class="btn bde bsm" onclick="closeModal()"><span class="mdi mdi-cancel"></span>Annuler</button>
+    <button class="mbtn" style="font-size:12px;padding:6px 13px" onclick="sendToFront(window._pendingEmailTo,window._pendingEmailSubj,window._pendingEmailBody,${id},'${type}');closeModal()"><span class="mdi mdi-open-in-new"></span>Ouvrir dans Front</button>`);
 }
 
 function openLastEmail(id){
@@ -460,7 +482,7 @@ function openLastEmail(id){
     <div class="al ali"><span class="mdi mdi-clock-outline"></span><span>Envoyé le ${last.ts} par ${last.a}</span></div>
     <div class="ep"><div class="eph"><div style="font-size:11px;color:var(--sub);margin-bottom:2px">${CFG.from_email} → ${to}</div><div class="eps">${subj}</div></div><div class="epb">${body}</div></div>`,`
     <div class="sp"></div><button class="btn" onclick="closeModal()">Fermer</button>
-    <a class="mbtn" style="font-size:12px;padding:6px 13px" href="${ml(to,subj,body)}"><span class="mdi mdi-refresh"></span>Renvoyer</a>`);
+    <button class="mbtn" style="font-size:12px;padding:6px 13px" onclick="closeModal();sendToFront('${to}','${subj.replace(/'/g,"\\'")}',document.querySelector('.epb')?.innerText||'')"><span class="mdi mdi-refresh"></span>Renvoyer</button>`);
 }
 
 function openConvId(id){
