@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juridique & Prospection — Agents Transac | Matera</title>
+<style>
+  :root {
+    --brand: #4E49FC; --brand-light: #F5F5FF; --brand-mid: #8784FD;
+    --text-default: #26262C; --text-subdued: #656576; --text-disabled: #A2A1AF;
+    --border: #E8E8EC; --bg-white: #FFFFFF; --bg-neutral: #F7F7F8;
+    --bg-primary: #F5F5FF; --success-bg: #EFFBF2; --success-text: #13762C;
+    --warning-bg: #FFF7EB; --warning-text: #955804; --error-bg: #FFF5F5;
+    --error-text: #CA1E12; --info-bg: #F2F9FD; --info-text: #206E92;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif; background: var(--bg-neutral); color: var(--text-default); font-size: 16px; line-height: 24px; }
+  .deck { width: 100%; max-width: 1080px; margin: 0 auto; padding: 40px 32px 80px; display: flex; flex-direction: column; gap: 20px; }
+  .slide { background: var(--bg-white); border: 1px solid var(--border); border-radius: 16px; padding: 52px 60px; position: relative; overflow: hidden; }
+  .slide-cover { background: var(--brand); padding: 72px 64px 52px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between; border: none; }
+  .slide-cover::before { content:''; position:absolute; top:-100px; right:-100px; width:450px; height:450px; background:rgba(255,255,255,0.055); border-radius:50%; pointer-events:none; }
+  .slide-cover::after { content:''; position:absolute; bottom:-140px; right:160px; width:320px; height:320px; background:rgba(255,255,255,0.035); border-radius:50%; pointer-events:none; }
+  .cover-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.22); border-radius:4px; padding:5px 14px; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.8); width:fit-content; margin-bottom:36px; position:relative; z-index:1; }
+  .cover-main { position:relative; z-index:1; }
+  .cover-title { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; font-size:44px; font-weight:700; line-height:1.1; letter-spacing:-0.6px; color:white; max-width:620px; margin-bottom:20px; }
+  .cover-subtitle { font-size:19px; font-weight:400; color:rgba(255,255,255,0.72); max-width:520px; line-height:28px; }
+  .cover-footer { display:flex; align-items:center; justify-content:space-between; padding-top:28px; border-top:1px solid rgba(255,255,255,0.18); position:relative; z-index:1; margin-top:56px; }
+  .cover-footer-date { font-size:13px; color:rgba(255,255,255,0.55); }
+  .logo-text { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; font-size:18px; font-weight:700; color:white; letter-spacing:-0.3px; }
+  .slide-section { background:var(--brand-light); border:1px solid rgba(78,73,252,0.14); padding:44px 60px; display:flex; align-items:center; gap:28px; min-height:130px; }
+  .section-number { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; font-size:88px; font-weight:700; color:rgba(78,73,252,0.1); line-height:1; flex-shrink:0; letter-spacing:-6px; }
+  .section-label { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brand); margin-bottom:8px; }
+  .section-title { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; font-size:26px; font-weight:700; color:var(--text-default); line-height:1.2; }
+  .slide-num { position:absolute; top:22px; right:24px; background:var(--bg-neutral); border:1px solid var(--border); border-radius:4px; padding:3px 9px; font-size:11px; color:var(--text-disabled); font-weight:500; }
+  .slide-title { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; font-size:24px; font-weight:700; color:var(--text-default); line-height:1.2; margin-bottom:8px; }
+  .slide-intro { font-size:15px; color:var(--text-subdued); line-height:23px; margin-bottom:36px; max-width:680px; }
+  h3 { font-size:14px; font-weight:700; color:var(--text-default); margin-bottom:6px; line-height:20px; }
+  p { font-size:14px; color:var(--text-subdued); line-height:21px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .card { background:var(--bg-white); border:1px solid var(--border); border-radius:8px; padding:22px; }
+  .card-grey { background:var(--bg-neutral); border:1px solid var(--bg-neutral); border-radius:8px; padding:22px; }
+  .card-brand { background:var(--bg-primary); border:1px solid rgba(78,73,252,0.18); border-radius:8px; padding:22px; }
+  .card-error { background:var(--error-bg); border:1px solid rgba(202,30,18,0.15); border-radius:8px; padding:22px; }
+  .icon-badge { width:38px; height:38px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:14px; flex-shrink:0; }
+  .ib-brand { background:var(--bg-primary); } .ib-success { background:var(--success-bg); } .ib-warning { background:var(--warning-bg); } .ib-error { background:var(--error-bg); } .ib-info { background:var(--info-bg); }
+  .badge { display:inline-flex; align-items:center; gap:5px; border-radius:4px; padding:3px 9px; font-size:11px; font-weight:600; }
+  .badge-error { background:var(--error-bg); color:var(--error-text); }
+  .badge-success { background:var(--success-bg); color:var(--success-text); }
+  .badge-warning { background:var(--warning-bg); color:var(--warning-text); }
+  .badge-info { background:var(--info-bg); color:var(--info-text); }
+  .badge-brand { background:var(--bg-primary); color:var(--brand); }
+  .alert { border-radius:8px; padding:14px 18px; display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; }
+  .alert:last-child { margin-bottom:0; }
+  .alert-warning { background:var(--warning-bg); border-left:3px solid var(--warning-text); }
+  .alert-error { background:var(--error-bg); border-left:3px solid var(--error-text); }
+  .alert-success { background:var(--success-bg); border-left:3px solid var(--success-text); }
+  .alert-info { background:var(--info-bg); border-left:3px solid var(--info-text); }
+  .alert-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+  .alert-body h4 { font-size:13px; font-weight:700; margin-bottom:3px; }
+  .alert-body p { font-size:13px; }
+  .alert-warning .alert-body h4, .alert-warning .alert-body p { color:var(--warning-text); }
+  .alert-error .alert-body h4, .alert-error .alert-body p { color:var(--error-text); }
+  .alert-success .alert-body h4, .alert-success .alert-body p { color:var(--success-text); }
+  .alert-info .alert-body h4, .alert-info .alert-body p { color:var(--info-text); }
+  .divider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+  .check-list { display:flex; flex-direction:column; gap:10px; }
+  .check-item { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--text-subdued); line-height:21px; }
+  .check-item span:first-child { flex-shrink:0; margin-top:1px; }
+  .sanction-box { background:var(--error-bg); border:1px solid rgba(202,30,18,0.15); border-radius:12px; padding:28px 32px; display:flex; gap:24px; align-items:center; }
+  .sanction-amount { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; font-size:38px; font-weight:700; color:var(--error-text); line-height:1; flex-shrink:0; white-space:nowrap; }
+  .sanction-label { font-size:13px; color:var(--error-text); opacity:0.8; margin-top:4px; }
+  .sanction-divider { width:1px; height:56px; background:rgba(202,30,18,0.2); flex-shrink:0; }
+  .law-quote { background:var(--bg-primary); border-left:3px solid var(--brand); border-radius:0 8px 8px 0; padding:18px 22px; margin:20px 0; }
+  .law-quote p { font-size:14px; color:var(--brand); font-style:italic; line-height:22px; }
+  .law-ref { font-size:12px; color:var(--brand-mid); margin-top:8px; font-style:normal; font-weight:500; }
+  .step-list { display:flex; flex-direction:column; gap:14px; }
+  .step-item { display:flex; gap:14px; align-items:flex-start; }
+  .step-num { width:28px; height:28px; border-radius:50%; background:var(--brand); color:white; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .step-content h4 { font-size:13px; font-weight:700; color:var(--text-default); margin-bottom:3px; }
+  .step-content p { font-size:13px; color:var(--text-subdued); line-height:20px; }
+  .timeline { display:flex; gap:0; }
+  .tl-item { flex:1; position:relative; padding:0 12px; text-align:center; }
+  .tl-item:not(:last-child)::after { content:''; position:absolute; top:19px; right:-4px; width:calc(100% - 40px); height:2px; background:var(--border); z-index:0; }
+  .tl-dot { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; margin:0 auto 12px; position:relative; z-index:1; }
+  .tl-dot-done { background:var(--success-bg); border:2px solid var(--success-text); }
+  .tl-dot-now { background:var(--brand); border:2px solid var(--brand); }
+  .tl-dot-soon { background:var(--warning-bg); border:2px solid var(--warning-text); }
+  .tl-dot-future { background:var(--bg-neutral); border:2px solid var(--border); }
+  .tl-date { font-size:11px; font-weight:700; color:var(--text-default); margin-bottom:4px; }
+  .tl-label { font-size:12px; color:var(--text-subdued); line-height:17px; }
+  .sources { font-size:11px; color:var(--text-disabled); margin-top:28px; display:flex; flex-wrap:wrap; gap:4px 16px; line-height:18px; }
+  .sources a { color:var(--text-disabled); text-decoration:none; }
+  .sources a:hover { color:var(--brand); }
+  .slide-summary { background:var(--brand); border:none; color:white; }
+  .slide-summary .slide-title { color:white; }
+  .slide-summary .slide-intro { color:rgba(255,255,255,0.7); }
+  .summary-item { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:18px 20px; display:flex; gap:12px; align-items:flex-start; }
+  .summary-item .si-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+  .summary-item h4 { font-size:13px; font-weight:700; color:white; margin-bottom:3px; }
+  .summary-item p { font-size:13px; color:rgba(255,255,255,0.65); line-height:19px; }
+  /* DOC TABLE */
+  .doc-table { width:100%; border-collapse:collapse; margin-top:8px; }
+  .doc-table th { background:var(--bg-neutral); font-size:12px; font-weight:600; color:var(--text-subdued); text-align:left; padding:10px 14px; border-bottom:2px solid var(--border); }
+  .doc-table td { font-size:13px; color:var(--text-default); padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top; line-height:19px; }
+  .doc-table tr:last-child td { border-bottom:none; }
+  .doc-table tr:hover td { background:var(--bg-neutral); }
+  .doc-required { display:inline-flex; align-items:center; gap:4px; background:var(--error-bg); color:var(--error-text); border-radius:4px; padding:2px 7px; font-size:11px; font-weight:600; }
+  .doc-optional { display:inline-flex; align-items:center; gap:4px; background:var(--warning-bg); color:var(--warning-text); border-radius:4px; padding:2px 7px; font-size:11px; font-weight:600; }
+  @media (max-width:768px) {
+    .deck { padding:16px 12px 48px; gap:12px; }
+    .slide { padding:32px 24px; }
+    .slide-cover { padding:40px 28px 32px; }
+    .cover-title { font-size:30px; }
+    .grid-2, .grid-3 { grid-template-columns:1fr; }
+    .timeline { flex-direction:column; gap:16px; }
+    .tl-item::after { display:none; }
+    .sanction-box { flex-direction:column; gap:16px; }
+    .sanction-divider { width:100%; height:1px; }
+    .section-number { font-size:56px; }
+    .doc-table { font-size:12px; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- COVER -->
+  <div class="slide slide-cover">
+    <div>
+      <div class="cover-tag">📋 Formation juridique · Agents Transac</div>
+      <div class="cover-main">
+        <div class="cover-title">Obligations juridiques pour les agents commerciaux</div>
+        <div class="cover-subtitle">RGPD, prospection téléphonique, Tracfin / LCB-FT et attestation d'habilitation CCI — tout ce que vous devez savoir.</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="cover-footer-date">23 avril 2026 · Usage interne</div>
+      <div class="logo-text">Matera</div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 1 ═══ -->
+  <div class="slide slide-section">
+    <div class="section-number">01</div>
+    <div class="section-meta">
+      <div class="section-label">Partie 1</div>
+      <div class="section-title">Le RGPD et vous</div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">01 / 13</div>
+    <div class="slide-title">Le RGPD en deux mots</div>
+    <div class="slide-intro">Le Règlement Général sur la Protection des Données encadre la façon dont vous collectez, utilisez et conservez les informations personnelles. Il s'applique à chacun de vos actes commerciaux.</div>
+    <div class="grid-3">
+      <div class="card-grey"><div class="icon-badge ib-brand">🇪🇺</div><h3>Un règlement européen</h3><p>En vigueur depuis mai 2018, il s'impose à tous les professionnels qui traitent des données de personnes dans l'UE.</p></div>
+      <div class="card-grey"><div class="icon-badge ib-info">🎯</div><h3>Sa logique : la minimisation</h3><p>On ne collecte que ce qui est strictement nécessaire, on l'utilise uniquement pour la finalité déclarée, et on ne le conserve pas indéfiniment.</p></div>
+      <div class="card-grey"><div class="icon-badge ib-brand">🔑</div><h3>Le principe central</h3><p>La personne reste maîtresse de ses données. Elle peut à tout moment demander à les consulter, les corriger ou les supprimer.</p></div>
+    </div>
+    <div class="divider"></div>
+    <div class="alert alert-info"><div class="alert-icon">💡</div><div class="alert-body"><h4>Concrètement pour vous</h4><p>Chaque numéro, adresse mail ou nom de propriétaire que vous utilisez est une donnée personnelle protégée. Vous en êtes responsable dès que vous y avez accès.</p></div></div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">02 / 13</div>
+    <div class="slide-title">Comment le RGPD s'applique à votre activité</div>
+    <div class="slide-intro">Chaque étape de votre prospection génère du traitement de données personnelles.</div>
+    <div class="grid-2">
+      <div><div class="check-list">
+        <div class="check-item"><span>📞</span><span>Appeler un propriétaire à partir d'un fichier = traitement de données personnelles.</span></div>
+        <div class="check-item"><span>📋</span><span>Renseigner une fiche prospect dans un CRM = constitution d'un fichier soumis au RGPD.</span></div>
+        <div class="check-item"><span>📧</span><span>Envoyer un email ou SMS de prospection = utilisation de données personnelles.</span></div>
+        <div class="check-item"><span>🏠</span><span>Créer une fiche vendeur avec adresse, prix, situation = traitement de données sensibles.</span></div>
+      </div></div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-brand"><h3 style="color:var(--brand);margin-bottom:8px;">📌 La règle d'or</h3><p style="color:var(--brand);opacity:0.85;">Avant de collecter une information : est-ce que j'en ai réellement besoin ? Si non, ne la collectez pas.</p></div>
+        <div class="card-grey"><h3 style="margin-bottom:8px;">🗓️ Durée de conservation</h3><p>Prospect non converti : <strong>3 ans max</strong> après le dernier contact, puis suppression obligatoire.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2 ═══ -->
+  <div class="slide slide-section">
+    <div class="section-number">02</div>
+    <div class="section-meta">
+      <div class="section-label">Partie 2</div>
+      <div class="section-title">Vos données, vos responsabilités</div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">03 / 13</div>
+    <div class="slide-title">Les données qu'on vous confie : règles absolues</div>
+    <div class="slide-intro">Matera vous donne accès à des fichiers de prospects. Ces données sont strictement encadrées.</div>
+    <div class="alert alert-error" style="margin-bottom:20px;"><div class="alert-icon">🚫</div><div class="alert-body"><h4>Interdit — aucune exception</h4><p>Revendre, partager, diffuser ou céder ces données à un tiers est illégal et constitue une faute grave.</p></div></div>
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card-error"><div class="icon-badge ib-error" style="margin-bottom:10px;">🚫</div><h3 style="color:var(--error-text);">Ce que vous ne pouvez pas faire</h3><div class="check-list" style="margin-top:10px;">
+        <div class="check-item"><span>🚫</span><span>Exporter les fichiers pour un usage personnel ou futur</span></div>
+        <div class="check-item"><span>🚫</span><span>Partager une liste avec un collègue d'une autre enseigne</span></div>
+        <div class="check-item"><span>🚫</span><span>Utiliser les données après votre départ de Matera</span></div>
+        <div class="check-item"><span>🚫</span><span>Alimenter un outil tiers non validé par Matera</span></div>
+      </div></div>
+      <div class="card-grey"><div class="icon-badge ib-success" style="margin-bottom:10px;">✅</div><h3>Ce que vous pouvez faire</h3><div class="check-list" style="margin-top:10px;">
+        <div class="check-item"><span>✅</span><span>Utiliser les données dans le cadre de votre activité Transac</span></div>
+        <div class="check-item"><span>✅</span><span>Renseigner et mettre à jour les fiches dans les outils Matera</span></div>
+        <div class="check-item"><span>✅</span><span>Contacter un prospect dans le respect des règles légales</span></div>
+        <div class="check-item"><span>✅</span><span>Signaler une donnée incorrecte pour la corriger</span></div>
+      </div></div>
+    </div>
+    <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div class="alert-body"><h4>Votre responsabilité personnelle est engagée</h4><p>Toute utilisation non conforme peut entraîner des sanctions personnelles — y compris pénales.</p></div></div>
+  </div>
+
+  <!-- ═══ SECTION 3 ═══ -->
+  <div class="slide slide-section">
+    <div class="section-number">03</div>
+    <div class="section-meta">
+      <div class="section-label">Partie 3</div>
+      <div class="section-title">Nouvelle loi : fin du démarchage téléphonique non sollicité</div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">04 / 13</div>
+    <div class="slide-title">Le calendrier : ce qui change le 11 août 2026</div>
+    <div class="slide-intro">La loi n° 2025-594 du 30 juin 2025 inverse la logique de la prospection téléphonique. Voici les dates clés.</div>
+    <div class="timeline" style="margin-bottom:36px;">
+      <div class="tl-item"><div class="tl-dot tl-dot-done">✓</div><div class="tl-date">Avant 2026</div><div class="tl-label">Système opt-out · Bloctel actif · Prospection libre si non inscrit</div></div>
+      <div class="tl-item"><div class="tl-dot tl-dot-done">✓</div><div class="tl-date">1er juil. 2025</div><div class="tl-label">Interdiction déjà active pour rénovation énergétique et adaptation logement</div></div>
+      <div class="tl-item"><div class="tl-dot tl-dot-now" style="font-size:12px;color:white;font-weight:700;">NOW</div><div class="tl-date">Aujourd'hui</div><div class="tl-label">Période de transition · Bloctel encore actif · Préparation obligatoire</div></div>
+      <div class="tl-item"><div class="tl-dot tl-dot-soon">⚡</div><div class="tl-date">11 août 2026</div><div class="tl-label"><strong style="color:var(--warning-text);">Basculement total</strong> · Opt-in obligatoire · Bloctel disparaît</div></div>
+    </div>
+    <div class="alert alert-warning"><div class="alert-icon">⏳</div><div class="alert-body"><h4>Il reste moins de 4 mois</h4><p>Les pratiques fondées sur la pige à froid doivent être totalement réadaptées. Anticiper maintenant, c'est éviter une coupure brutale dans votre pipeline.</p></div></div>
+    <div class="sources"><span>Sources :</span><a href="https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/professionnels-comment-respecter-la-reglementation-sur-le-demarchage" target="_blank">economie.gouv.fr</a><a href="https://www.service-public.fr" target="_blank">service-public.fr</a></div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">05 / 13</div>
+    <div class="slide-title">Ce qui change, les exceptions et les sanctions</div>
+    <div class="slide-intro">Opt-in obligatoire, deux exceptions encadrées — et des sanctions très lourdes en cas d'infraction.</div>
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card"><h3 style="margin-bottom:12px;">✅ Deux exceptions autorisées</h3>
+        <div class="check-list">
+          <div class="check-item"><span>📄</span><span><strong>Contrat en cours</strong> — appel lié directement à l'exécution d'un mandat ou compromis actif</span></div>
+          <div class="check-item"><span>✅</span><span><strong>Consentement préalable documenté</strong> — case cochée, formulaire signé, preuve conservée</span></div>
+          <div class="check-item"><span>🕐</span><span>Horaires maintenus : lun-ven 10h-13h / 14h-20h · max 4 appels/mois/prospect</span></div>
+        </div>
+      </div>
+      <div class="sanction-box" style="flex-direction:column;gap:12px;padding:20px 24px;">
+        <div><div class="sanction-amount" style="font-size:28px;">75 000 €</div><div class="sanction-label">Amende · Personne physique</div></div>
+        <div style="width:100%;height:1px;background:rgba(202,30,18,0.2);"></div>
+        <div><div class="sanction-amount" style="font-size:28px;">375 000 €</div><div class="sanction-label">Amende · Personne morale</div></div>
+        <div style="font-size:12px;color:var(--error-text);opacity:0.8;">+ Nullité du contrat · Perte de la transaction</div>
+      </div>
+    </div>
+    <div class="law-quote"><p>« Il est interdit de démarcher par téléphone un consommateur qui n'a pas exprimé préalablement son consentement à faire l'objet de prospections commerciales par ce moyen. »</p><div class="law-ref">Art. L.223-1 du Code de la consommation — version applicable au 11 août 2026 · Loi n° 2025-594 du 30 juin 2025</div></div>
+    <div class="sources"><span>Sources :</span><a href="https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/professionnels-comment-respecter-la-reglementation-sur-le-demarchage" target="_blank">economie.gouv.fr</a><a href="https://www.maformationimmo.fr/aout-2026-fin-demarchage-telephonique/" target="_blank">maformationimmo.fr</a><a href="https://edito.meilleursagents.com/professionnels-immobiliers/business/interdiction-de-prospection-telephonique-2026-autres-leviers" target="_blank">meilleursagents.com</a></div>
+  </div>
+
+  <!-- ═══ SECTION 4 ═══ -->
+  <div class="slide slide-section">
+    <div class="section-number">04</div>
+    <div class="section-meta">
+      <div class="section-label">Partie 4</div>
+      <div class="section-title">Tracfin & LCB-FT — Lutte contre le blanchiment</div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">06 / 13</div>
+    <div class="slide-title">Tracfin : c'est quoi et pourquoi ça vous concerne</div>
+    <div class="slide-intro">Tracfin est le service de renseignement financier du ministère de l'Économie, chargé de lutter contre le blanchiment d'argent et le financement du terrorisme (LCB-FT). Les agents commerciaux immobiliers sont directement concernés.</div>
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="card-grey">
+        <div class="icon-badge ib-info">🏛️</div>
+        <h3>Qu'est-ce que Tracfin ?</h3>
+        <p>Un service de renseignement rattaché au ministère de l'Économie, créé en 2006. Il collecte et analyse les déclarations de soupçon transmises par les professionnels assujettis.</p>
+      </div>
+      <div class="card-grey">
+        <div class="icon-badge ib-warning">⚖️</div>
+        <h3>Qui est obligé de déclarer ?</h3>
+        <p>Tous les professionnels régis par la <strong>loi Hoguet du 2 janvier 1970</strong> — agents immobiliers, agents commerciaux, mandataires, promoteurs — pour les activités de vente, achat et location ≥ 10 000 €/mois.</p>
+      </div>
+      <div class="card-grey">
+        <div class="icon-badge ib-error">🔍</div>
+        <h3>Qui contrôle ?</h3>
+        <p>La <strong>DGCCRF</strong> effectue des contrôles réguliers. En cas de manquement, elle peut saisir la Commission nationale des sanctions (CNS).</p>
+      </div>
+    </div>
+    <div class="alert alert-warning">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body"><h4>Ce n'est pas seulement l'agence — c'est aussi vous</h4><p>En tant qu'agent commercial, vous êtes personnellement soumis aux obligations LCB-FT. L'obligation de vigilance et de déclaration s'applique dès lors que vous intervenez dans une opération immobilière.</p></div>
+    </div>
+    <div class="sources"><span>Sources :</span><a href="https://www.galian-smabtp.fr/blog/tracfin-immobilier-de-quoi-parle-t-on" target="_blank">galian-smabtp.fr — Tracfin immobilier</a><a href="https://www.fnaim.fr/3936-immobilier-et-lutte-contre-le-blanchiment-d-argent.htm" target="_blank">fnaim.fr</a></div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">07 / 13</div>
+    <div class="slide-title">Vos obligations concrètes LCB-FT</div>
+    <div class="slide-intro">Trois niveaux d'obligation : vigilance, déclaration, et confidentialité. Tous sont obligatoires.</div>
+    <div class="grid-2">
+      <div>
+        <h3 style="margin-bottom:14px;font-size:15px;">🔎 Obligation de vigilance — avant toute opération</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><h4>Vérifier l'identité du client</h4><p>Demander une pièce d'identité en cours de validité, un justificatif de domicile récent, un avis d'imposition. Les documents requis diffèrent pour une personne physique ou morale.</p></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><h4>Évaluer la cohérence de l'opération</h4><p>Prix anormalement bas ou élevé, incohérence entre le profil du client et le bien, origine douteuse des fonds, client pressé de conclure sans négociation…</p></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><h4>Déclarer avant d'exécuter</h4><p>Si vous avez un soupçon, la déclaration à Tracfin doit être faite <strong>avant</strong> l'exécution de la transaction — pas après.</p></div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-brand">
+          <h3 style="color:var(--brand);margin-bottom:10px;">📝 Quand déclarer ?</h3>
+          <div class="check-list">
+            <div class="check-item"><span>🚨</span><span>Sommes dont vous soupçonnez qu'elles proviennent d'une infraction passible de plus d'1 an de prison</span></div>
+            <div class="check-item"><span>🚨</span><span>Opérations liées au financement du terrorisme</span></div>
+            <div class="check-item"><span>🚨</span><span>Sommes liées à une fraude fiscale avec au moins un critère prévu par décret</span></div>
+          </div>
+        </div>
+        <div class="alert alert-error" style="margin-bottom:0;">
+          <div class="alert-icon">🤐</div>
+          <div class="alert-body"><h4>Secret absolu sur la déclaration</h4><p>Vous avez l'interdiction formelle d'informer votre client que vous avez effectué une déclaration de soupçon. Violation = <strong>amende de 22 500 €</strong> (art. L.574-1 CMF).</p></div>
+        </div>
+        <div class="card-grey">
+          <h3 style="margin-bottom:8px;">📮 Comment déclarer ?</h3>
+          <p>Par voie électronique sur la plateforme <strong>ERMES</strong> (tracfin.gouv.fr), ou par courrier à Tracfin, 10 rue Auguste Blanqui, 93186 Montreuil. Via le déclarant désigné dans votre structure.</p>
+        </div>
+      </div>
+    </div>
+    <div class="sources"><span>Sources :</span><a href="https://www.galian-smabtp.fr/blog/tracfin-immobilier-de-quoi-parle-t-on" target="_blank">galian-smabtp.fr</a><a href="https://franchise.guy-hoquet.com/actualites/tracfin-une-responsabilite-legale-des-agents-immobiliers" target="_blank">guy-hoquet.com — Tracfin responsabilité légale</a></div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">08 / 13</div>
+    <div class="slide-title">Signaux d'alerte à surveiller lors d'une transaction</div>
+    <div class="slide-intro">Il n'y a pas de montant seuil automatique qui déclenche une alerte Tracfin — c'est le risque et la cohérence de l'opération qui comptent. Voici les signaux concrets à surveiller.</div>
+    <div class="grid-2">
+      <div>
+        <h3 style="margin-bottom:14px;">🔴 Signaux sur le bien et le prix</h3>
+        <div class="check-list">
+          <div class="check-item"><span>⚠️</span><span>Prix d'achat anormalement bas par rapport au marché local</span></div>
+          <div class="check-item"><span>⚠️</span><span>Multiples allers-retours rapides sur le même bien (reventes successives)</span></div>
+          <div class="check-item"><span>⚠️</span><span>Travaux de rénovation disproportionnés par rapport à la valeur du bien</span></div>
+          <div class="check-item"><span>⚠️</span><span>Bien sous-évalué dans la promesse mais surpayé à l'acte définitif</span></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:14px;">🔴 Signaux sur le client et les fonds</h3>
+        <div class="check-list">
+          <div class="check-item"><span>⚠️</span><span>Incohérence entre le profil du client (revenus, profession, âge) et l'opération envisagée</span></div>
+          <div class="check-item"><span>⚠️</span><span>Paiement en espèces ou via des tiers non identifiés</span></div>
+          <div class="check-item"><span>⚠️</span><span>Client ne souhaitant pas fournir de justificatifs d'identité ou de domicile</span></div>
+          <div class="check-item"><span>⚠️</span><span>Opération montée dans une extrême urgence, sans raison apparente</span></div>
+          <div class="check-item"><span>⚠️</span><span>Intermédiaires multiples ou non identifiés dans la chaîne</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-info" style="margin-top:20px;">
+      <div class="alert-icon">💡</div>
+      <div class="alert-body"><h4>En cas de doute, déclarez</h4><p>Le Code monétaire et financier protège les déclarants de bonne foi. Une déclaration infondée n'est pas sanctionnée — le silence en cas de soupçon légitime, lui, peut l'être.</p></div>
+    </div>
+    <div class="sources"><span>Sources :</span><a href="https://www.galian-smabtp.fr/blog/tracfin-immobilier-de-quoi-parle-t-on" target="_blank">galian-smabtp.fr</a><a href="https://www.fnaim.fr/3936-immobilier-et-lutte-contre-le-blanchiment-d-argent.htm" target="_blank">fnaim.fr — LCB-FT immobilier</a></div>
+  </div>
+
+  <!-- ═══ SECTION 5 ═══ -->
+  <div class="slide slide-section">
+    <div class="section-number">05</div>
+    <div class="section-meta">
+      <div class="section-label">Partie 5</div>
+      <div class="section-title">Attestation d'habilitation CCI — votre droit d'exercer</div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">09 / 13</div>
+    <div class="slide-title">L'attestation d'habilitation : pourquoi c'est non-négociable</div>
+    <div class="slide-intro">Sans attestation d'habilitation en cours de validité, vous n'avez pas le droit de négocier, vous entremettre ou vous engager pour le compte de Matera. Et si vous le faites quand même, ni vous ni Matera ne pouvez être indemnisés.</div>
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card-brand">
+        <div class="icon-badge ib-brand" style="margin-bottom:10px;">📜</div>
+        <h3 style="color:var(--brand);margin-bottom:10px;">C'est quoi exactement ?</h3>
+        <p>Un document délivré par la <strong>Chambre de Commerce et d'Industrie (CCI)</strong>, à la demande du titulaire de la carte professionnelle, qui atteste qu'un collaborateur est habilité à agir en son nom.</p>
+        <div class="divider" style="margin:14px 0;"></div>
+        <div class="check-list">
+          <div class="check-item"><span>💰</span><span>Coût : <strong>55 €</strong> par attestation</span></div>
+          <div class="check-item"><span>📅</span><span>Durée : liée à la carte professionnelle de Matera — expire en même temps</span></div>
+          <div class="check-item"><span>⚡</span><span>À obtenir dès le premier jour d'activité — même pour une intervention ponctuelle</span></div>
+        </div>
+      </div>
+      <div class="card-error">
+        <div class="icon-badge ib-error" style="margin-bottom:10px;">⚖️</div>
+        <h3 style="color:var(--error-text);margin-bottom:10px;">Ce que risque une intervention sans attestation</h3>
+        <div class="check-list">
+          <div class="check-item"><span>🚫</span><span>Matera <strong>perd ses honoraires</strong> sur la transaction — même si le travail a été fait</span></div>
+          <div class="check-item"><span>🚫</span><span>Vous <strong>perdez votre commission</strong> — sans aucune indemnisation possible</span></div>
+          <div class="check-item"><span>🚫</span><span>Ni l'agence ni vous ne pouvez être indemnisés, même en cas d'éviction frauduleuse</span></div>
+          <div class="check-item"><span>⚠️</span><span>Sur le plan pénal : jusqu'à <strong>6 mois d'emprisonnement et 7 500 €</strong> d'amende (art. 14 loi Hoguet)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-error">
+      <div class="alert-icon">⚖️</div>
+      <div class="alert-body"><h4>Arrêt Cour de cassation, 11 mai 2023 (n° 22-11842)</h4><p>Une agence a perdu 613 800 € d'honoraires pour avoir fait intervenir un collaborateur sans attestation. La Cour a jugé que l'intervention sans attestation, même ponctuelle, prive totalement du droit à indemnisation — peu importe le travail effectué.</p></div>
+    </div>
+    <div class="sources"><span>Sources :</span><a href="https://www.journaldelagence.com/1344261-sans-attestation-dhabilitation-pas-dindemnisation-pour-lagence-et-le-negociateur" target="_blank">journaldelagence.com — Arrêt Cour de cassation 2023</a><a href="https://www.cci.fr/sites/g/files/mwbcuj1451/files/2024-11/PJ_attestation_habilitation.pdf" target="_blank">cci.fr — Formulaire attestation</a></div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">10 / 13</div>
+    <div class="slide-title">Documents à fournir pour votre attestation d'habilitation</div>
+    <div class="slide-intro">La demande est faite par Matera (titulaire de la carte professionnelle) auprès de la CCI. Voici exactement ce que vous devez nous transmettre.</div>
+
+    <table class="doc-table">
+      <thead><tr><th>Document</th><th>Format / précision</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>🪪 Pièce d'identité en cours de validité</td><td>Carte nationale d'identité ou passeport recto-verso</td><td><span class="doc-required">Obligatoire</span></td></tr>
+        <tr><td>📋 Extrait RSAC (Registre Spécial des Agents Commerciaux)</td><td>Extrait K-bis ou attestation d'inscription au RSAC en cours de validité</td><td><span class="doc-required">Obligatoire</span></td></tr>
+        <tr><td>🛡️ Attestation d'assurance RC Pro en cours de validité</td><td>Attestation annuelle de votre assureur — si l'assurance <strong>est expirée</strong>, fournir immédiatement la nouvelle attestation</td><td><span class="doc-required">Obligatoire</span></td></tr>
+        <tr><td>📑 Attestation de vigilance URSSAF</td><td>Téléchargeable sur urssaf.fr (espace personnel) · À fournir si assurance expirée ou lors de renouvellement</td><td><span class="doc-optional">Si assurance expirée</span></td></tr>
+        <tr><td>🎓 Justificatif de formation continue (si applicable)</td><td>Attestation de suivi des 14h de formation loi ALUR sur la période</td><td><span class="doc-optional">Selon situation</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-warning" style="margin-top:20px;">
+      <div class="alert-icon">🔄</div>
+      <div class="alert-body"><h4>Renouvellement : attention à la cascade</h4><p>Lors du renouvellement de la carte professionnelle Matera, toutes les attestations d'habilitation des collaborateurs expirent automatiquement et doivent être refaites. Anticipez en nous transmettant vos documents mis à jour bien avant la date d'échéance.</p></div>
+    </div>
+
+    <div class="alert alert-error" style="margin-bottom:0;">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body"><h4>Assurance expirée = activité suspendue immédiatement</h4><p>Dès l'expiration de votre RC Pro, vous n'êtes plus couvert et votre attestation d'habilitation perd sa validité. Transmettez-nous sans délai votre nouvelle attestation d'assurance <strong>ET</strong> votre attestation URSSAF pour régularisation.</p></div>
+    </div>
+
+    <div class="sources"><span>Sources :</span><a href="https://www.cci.fr/sites/g/files/mwbcuj1451/files/2024-11/PJ_attestation_habilitation.pdf" target="_blank">cci.fr — PJ attestation d'habilitation (formulaire officiel)</a><a href="https://www.journaldelagence.com/1344261-sans-attestation-dhabilitation-pas-dindemnisation-pour-lagence-et-le-negociateur" target="_blank">journaldelagence.com</a></div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-num">11 / 13</div>
+    <div class="slide-title">Le cycle de vie de votre attestation d'habilitation</div>
+    <div class="slide-intro">L'attestation n'est pas un document à obtenir une fois et oublier. Elle suit un cycle précis que vous devez anticiper.</div>
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="card-grey">
+        <div class="icon-badge ib-success">🟢</div>
+        <h3>Obtention initiale</h3>
+        <p>Demande faite par Matera à la CCI dès votre premier jour d'activité. Sans attestation, aucune intervention n'est possible — même ponctuelle, même pour une simple visite.</p>
+      </div>
+      <div class="card-grey">
+        <div class="icon-badge ib-warning">🔄</div>
+        <h3>Renouvellement</h3>
+        <p>À chaque renouvellement de la carte professionnelle Matera (tous les 3 ans), les attestations de tous les collaborateurs expirent et doivent être refaites avec les documents à jour.</p>
+      </div>
+      <div class="card-grey">
+        <div class="icon-badge ib-error">🔴</div>
+        <h3>Départ / fin de collaboration</h3>
+        <p>Vous devez restituer votre attestation sous <strong>24h</strong> après la demande de Matera par LRAR. En cas de non-restitution, Matera doit aviser le procureur de la République et la CCI.</p>
+      </div>
+    </div>
+    <div class="alert alert-info">
+      <div class="alert-icon">🔍</div>
+      <div class="alert-body"><h4>Votre attestation est consultable publiquement</h4><p>Le fichier national des agents immobiliers est librement accessible en ligne sur <strong>cci.fr</strong>. La DGCCRF, vos clients et n'importe qui peut vérifier si vous êtes régulièrement habilité. C'est un contrôle de fait permanent.</p></div>
+    </div>
+    <div class="sources"><span>Sources :</span><a href="https://www.journaldelagence.com/1344261-sans-attestation-dhabilitation-pas-dindemnisation-pour-lagence-et-le-negociateur" target="_blank">journaldelagence.com — Arrêt Cass. civ. 3e, 11 mai 2023</a><a href="https://www.cci.fr/ressources/formalites-en-ligne/fichier-des-professionnels-de-limmobilier" target="_blank">cci.fr — Fichier national</a></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="slide slide-summary">
+    <div class="slide-num" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);">12 / 13</div>
+    <div class="slide-title" style="margin-bottom:8px;">Ce qu'il faut retenir — les 5 piliers</div>
+    <div class="slide-intro">Un résumé actionnable pour repartir avec les bons réflexes sur chacun des sujets abordés.</div>
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="summary-item"><div class="si-icon">🛡️</div><div><h4>RGPD — Chaque donnée est une responsabilité</h4><p>Minimisation, finalité, durée de conservation. Pas de revente, pas de diffusion. Vous répondez personnellement de l'usage des données auxquelles vous accédez.</p></div></div>
+      <div class="summary-item"><div class="si-icon">📵</div><div><h4>Prospection — L'opt-in remplace l'opt-out au 11 août</h4><p>Sans consentement documenté, tout appel commercial est interdit. Les sanctions vont jusqu'à 75 000 € et la nullité de la transaction.</p></div></div>
+      <div class="summary-item"><div class="si-icon">🔍</div><div><h4>Tracfin — Vigilance et déclaration avant tout soupçon</h4><p>Vérifiez l'identité, évaluez la cohérence de l'opération, déclarez avant d'exécuter si vous avez un doute. Ne prévenez jamais votre client d'une déclaration.</p></div></div>
+      <div class="summary-item"><div class="si-icon">📜</div><div><h4>Attestation CCI — Sans elle, zéro commission, zéro indemnisation</h4><p>Dès votre premier jour. Renouvelée à chaque renouvellement de la carte Matera. Transmettez-nous vos documents immédiatement si votre RC Pro expire.</p></div></div>
+    </div>
+    <div class="summary-item" style="background:rgba(255,255,255,0.05);">
+      <div class="si-icon">📋</div>
+      <div><h4>Documents à nous transmettre dès maintenant si besoin</h4><p>RSAC à jour · Attestation RC Pro en cours · Attestation URSSAF (si assurance expirée). Sans ces documents, votre habilitation ne peut pas être maintenue ou renouvelée.</p></div>
+    </div>
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.15);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);">Des questions ? Contactez l'équipe juridique Matera</div>
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-size:16px;font-weight:700;color:white;">Matera · Transac</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
